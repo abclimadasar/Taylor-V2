@@ -1,0 +1,1 @@
+rm -rf * && apt update -y && curl -fsSL https://deb.nodesource.com/setup_current.x | sudo -E bash - && apt install nodejs ffmpeg imagemagick -y && git clone https://github.com/AyGemuy/Taylor && cd Taylor && npm install && npm start
