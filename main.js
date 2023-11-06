@@ -591,7 +591,6 @@ global.reloadHandler = async function(restatConn) {
         conn.ev.off("presence.update", conn.presenceUpdate);
         conn.ev.off('connection.update', conn.connectionUpdate);
         conn.ev.off('creds.update', conn.credsUpdate);
-        conn.ev.off('contacts.upsert', conn.contactsUpdate);
     }
 
     const emoji = {
@@ -630,7 +629,6 @@ global.reloadHandler = async function(restatConn) {
     conn.presenceUpdate = handler.presenceUpdate.bind(global.conn);
     conn.connectionUpdate = connectionUpdate.bind(global.conn);
     conn.credsUpdate = authState.saveCreds.bind(global.conn, true);
-    conn.contactsUpdate = handler.contactsUpdate.bind(global.conn);
 
     const currentDateTime = new Date();
     const messageDateTime = new Date(conn.ev);
@@ -648,7 +646,7 @@ global.reloadHandler = async function(restatConn) {
     conn.ev.on("presence.update", conn.presenceUpdate);
     conn.ev.on('connection.update', conn.connectionUpdate);
     conn.ev.on('creds.update', conn.credsUpdate);
-    conn.ev.on('contacts.upsert', conn.contactsUpdate);
+    
     isInit = false;
     return true;
 };

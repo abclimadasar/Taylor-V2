@@ -1380,7 +1380,7 @@ export async function participantsUpdate({
 
 					const welran = await WelcomeLeave(await this.profilePictureUrl(user, "image").catch(() => hwaifu.getRandom()), await this.getName(user), katarandom.getRandom(), "Welcome");
 					const byeran = await WelcomeLeave(await this.profilePictureUrl(id, "image").catch(() => hwaifu.getRandom()), await this.getName(id), katarandom.getRandom(), "Leave");
-
+					const spaces = "                    "
 					const lapor = `\n\n${emoji.mail} *Pesan:* Jika menemukan bug, error, atau kesulitan dalam penggunaan, silakan laporkan/tanyakan kepada ${emoji.owner}`;
 					await this.reply(
 						id,
@@ -1389,7 +1389,8 @@ export async function participantsUpdate({
 							contextInfo: {
 								mentionedJid: [participants[0]],
 								externalAdReply: {
-									title: isAddAction ? "W E L C O M E" : "L E A V E",
+									title: htki + (isAddAction ? " Member Join " : " Member Out ") + htka,
+									body: spaces + bottime,
 									mediaType: 1,
 									renderLargerThumbnail: true,
 									thumbnail: await (await this.getFile(isAddAction ? welran : byeran)).data,
@@ -1592,28 +1593,6 @@ export async function pollUpdate(message) {
 			}
 		}
 	}
-}
-
-/*
- Contacts Update 
-*/
-export async function contactsUpdate(contacts) {
-console.log(contacts)
-	if (!contacts) return
-        for (const contact of contacts) {
-            const id = this.decodeJid(contact.id)
-            if (!id) continue
-            let chats = this.contacts[id]
-            if (!chats) chats = this.contacts[id] = { id }
-            this.contacts[id] = {
-                ...chats,
-                ...({
-                    ...contact, id, ...(id.endsWith('@g.us') ?
-                        { subject: contact.subject || chats.subject || '' } :
-                        { name: contact.notify || chats.name || chats.notify || '' })
-                } || {})
-            }
-        }
 }
 
 /*
