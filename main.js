@@ -4,9 +4,10 @@ import './config.js';
 import {
     createRequire
 } from "module";
-import path, {
+import {
     join
 } from 'path';
+import path from 'path';
 import {
     fileURLToPath,
     pathToFileURL
@@ -35,7 +36,7 @@ import {
     rmSync,
     watch
 } from 'fs';
-
+import fs from 'fs/promises';
 import yargs from 'yargs';
 import {
     spawn
@@ -47,7 +48,6 @@ import {
     tmpdir
 } from 'os';
 import chokidar from 'chokidar';
-import glob from 'glob';
 import {
     format,
     promisify
@@ -653,16 +653,23 @@ global.reloadHandler = async function(restatConn) {
 
 global.plugins = {};
 const pluginFilter = (filename) => /\.js$/.test(filename);
+
 async function filesInit() {
-    const CommandsFiles = glob.sync("./plugins/**/*.js");
-    for (let file of CommandsFiles) {
-        try {
-            const module = await import(file);
-            global.plugins[file] = module.default || module;
-        } catch (e) {
-            conn.logger.error(e);
-            delete global.plugins[file];
+    const directory = './plugins';
+    try {
+        const CommandsFiles = await getJSFiles(path.join(__dirname, directory));
+
+        for (let file of CommandsFiles) {
+            try {
+                const module = await import(file);
+                global.plugins[file] = module.default || module;
+            } catch (e) {
+                conn.logger.error(e);
+                delete global.plugins[file];
+            }
         }
+    } catch (e) {
+        conn.logger.error(e);
     }
 }
 filesInit()
@@ -679,6 +686,25 @@ filesInit()
             });
     })
     .catch(console.error);
+    
+async function getJSFiles(directory) {
+    const files = await fs.readdir(directory);
+    const jsFiles = [];
+
+    for (let file of files) {
+        const filePath = path.join(directory, file);
+        const stat = await fs.stat(filePath);
+
+        if (stat.isFile() && path.extname(file) === '.js') {
+            jsFiles.push(filePath);
+        } else if (stat.isDirectory()) {
+            const nestedJSFiles = await getJSFiles(filePath);
+            jsFiles.push(...nestedJSFiles);
+        }
+    }
+
+    return jsFiles;
+}
 
 function FileEv(type, file) {
     const filename = async (file) => file.replace(/^.*[\\\/]/, "");
