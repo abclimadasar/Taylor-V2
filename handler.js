@@ -1158,7 +1158,10 @@ export async function handler(chatUpdate) {
 						chat?.isBanned
 					)
 						return // Except this
-					if (name != "./plugins/Owner/owner-unbanuser.js" && user?.banned)
+					if (name != "./plugins/Owner/owner-unbanuser.js" &&
+						name != "./plugins/Owner/owner-exec.js" &&
+						name != "./plugins/Owner/owner-exec2.js" &&
+						user?.banned)
 						return
 				}
 				if (plugin.rowner && plugin.owner && !(isROwner || isOwner)) { // Both Owner
@@ -1404,53 +1407,53 @@ export async function participantsUpdate({
 			}
 			break;
 		case "promote":
-            const promoteText = (chat.sPromote || this.spromote || conn.spromote || `${emoji.promote} @user *telah diangkat menjadi Admin*`).replace("@user", "@" + participants[0].split("@")[0]);
-            const promoteString = WAMessageStubType[29];
+			const promoteText = (chat.sPromote || this.spromote || conn.spromote || `${emoji.promote} @user *telah diangkat menjadi Admin*`).replace("@user", "@" + participants[0].split("@")[0]);
+			const promoteString = WAMessageStubType[29];
 
-	const resultPromoteString = promoteString
-		.split('_')
-		.map(word => word === 'UNKNOWN' ? 'Tidak Diketahui' : (word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()))
-		.join(' ');
-            if (chat.detect) {
-                this.reply(
-                    id,
-                    promoteText.trim(),
-                    fakes, {
-                        contextInfo: {
-                            mentionedJid: [participants[0]],
-                            externalAdReply: {
-                                title: resultPromoteString,
-                                thumbnail: await(await this.getFile("https://cdn-icons-png.flaticon.com/128/6542/6542976.png")).data
-                            },
-                        },
-                    }
-                )
-            }
-            break;
-        case "demote":
-            const demoteText = (chat.sDemote || this.sdemote || conn.sdemote || `${emoji.demote} @user *tidak lagi menjadi Admin*`).replace("@user", "@" + participants[0].split("@")[0]);
-            const demoteString = WAMessageStubType[30];
+			const resultPromoteString = promoteString
+				.split('_')
+				.map(word => word === 'UNKNOWN' ? 'Tidak Diketahui' : (word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()))
+				.join(' ');
+			if (chat.detect) {
+				this.reply(
+					id,
+					promoteText.trim(),
+					fakes, {
+						contextInfo: {
+							mentionedJid: [participants[0]],
+							externalAdReply: {
+								title: resultPromoteString,
+								thumbnail: await (await this.getFile("https://cdn-icons-png.flaticon.com/128/6542/6542976.png")).data
+							},
+						},
+					}
+				)
+			}
+			break;
+		case "demote":
+			const demoteText = (chat.sDemote || this.sdemote || conn.sdemote || `${emoji.demote} @user *tidak lagi menjadi Admin*`).replace("@user", "@" + participants[0].split("@")[0]);
+			const demoteString = WAMessageStubType[30];
 
-	const resultDemoteString = demoteString
-		.split('_')
-		.map(word => word === 'UNKNOWN' ? 'Tidak Diketahui' : (word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()))
-		.join(' ');
-            if (chat.detect) {
-                this.reply(
-                    id,
-                    demoteText.trim(),
-                    null, {
-                        contextInfo: {
-                            mentionedJid: [participants[0]],
-                            externalAdReply: {
-                                title: resultDemoteString,
-                                thumbnail: await(await this.getFile("https://cdn-icons-png.flaticon.com/128/6542/6542976.png")).data
-                            },
-                        },
-                    }
-                )
-            }
-            break;
+			const resultDemoteString = demoteString
+				.split('_')
+				.map(word => word === 'UNKNOWN' ? 'Tidak Diketahui' : (word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()))
+				.join(' ');
+			if (chat.detect) {
+				this.reply(
+					id,
+					demoteText.trim(),
+					null, {
+						contextInfo: {
+							mentionedJid: [participants[0]],
+							externalAdReply: {
+								title: resultDemoteString,
+								thumbnail: await (await this.getFile("https://cdn-icons-png.flaticon.com/128/6542/6542976.png")).data
+							},
+						},
+					}
+				)
+			}
+			break;
 	}
 }
 
@@ -1483,19 +1486,19 @@ export async function groupsUpdate(groupsUpdate) {
 		if (groupUpdate.desc) {
 			text = (chats.sDesc || this.sDesc || conn.sDesc || `*${emoji.desc} Deskripsi telah diubah menjadi*\n@desc`)
 				.replace("@desc", groupUpdate.desc)
-				stubType = 24
+			stubType = 24
 		} else if (groupUpdate.subject) {
 			text = (chats.sSubject || this.sSubject || conn.sSubject || `*${emoji.subject} Subjek telah diubah menjadi*\n@subject`)
 				.replace("@subject", groupUpdate.subject)
-				stubType = 21
+			stubType = 21
 		} else if (groupUpdate.icon) {
 			text = (chats.sIcon || this.sIcon || conn.sIcon || `*${emoji.icon} Icon telah diubah menjadi*`)
 				.replace("@icon", groupUpdate.icon)
-				stubType = 22
+			stubType = 22
 		} else if (groupUpdate.revoke) {
 			text = (chats.sRevoke || this.sRevoke || conn.sRevoke || `*${emoji.revoke} Tautan grup telah diubah menjadi*\n@revoke`)
 				.replace("@revoke", groupUpdate.revoke)
-				stubType = 1
+			stubType = 1
 		} else if (groupUpdate.announce === true) {
 			text = (chats.sAnnounceOn || this.sAnnounceOn || conn.sAnnounceOn || `*${emoji.announceOn} Grup telah ditutup!*`)
 			stubType = 26
@@ -1511,11 +1514,11 @@ export async function groupsUpdate(groupsUpdate) {
 		}
 		const inputString = WAMessageStubType[stubType];
 
-	const resultString = inputString
-		.split('_')
-		.map(word => word === 'UNKNOWN' ? 'Tidak Diketahui' : (word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()))
-		.join(' ');
-		
+		const resultString = inputString
+			.split('_')
+			.map(word => word === 'UNKNOWN' ? 'Tidak Diketahui' : (word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()))
+			.join(' ');
+
 		if (!text) continue
 		this.reply(
 			id,
