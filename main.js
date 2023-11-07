@@ -674,9 +674,9 @@ async function filesInit() {
 }
 filesInit()
     .then(async (_) => {
-        console.log("Load " + (Object.keys(global.plugins)).length + " plugins total.");
+        console.log("Load " + (Object.keys(global.plugins)).length + " File JS total.");
         await conn.sendMessage(nomorown + "@s.whatsapp.net", {
-                text: "Bot Successfully Load Plugins",
+                text: "Successfully load " + (Object.keys(global.plugins)).length + " JS plugins",
                 mentions: [nomorown + "@s.whatsapp.net", conn.user.jid]
             }, {
                 quoted: null
