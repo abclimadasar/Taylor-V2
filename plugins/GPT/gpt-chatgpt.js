@@ -15,22 +15,17 @@ let handler = async (m, {
     await m.reply(wait)
     try {
         let res = await ChatGptV1(text)
-        await m.reply(res.message)
+        await m.reply(res)
     } catch (e) {
         try {
             let res = await ChatGptV2(text)
-            await m.reply(res.message)
+            await m.reply(res)
         } catch (e) {
             try {
                 let res = await ChatGptV3(text)
-                await m.reply(res.answer)
+                await m.reply(res[0].generated_text)
             } catch (e) {
-                try {
-                    let res = await ChatGptV4(text)
-                    await m.reply(res[0].generated_text)
-                } catch (e) {
-                    await m.reply(eror)
-                }
+                await m.reply(eror)
             }
         }
     }
@@ -42,80 +37,32 @@ handler.command = /^(chatgpt)$/i
 export default handler
 
 /* New Line */
-function generateRandomIP() {
-    const octet = () => Math.floor(Math.random() * 256);
-    return `${octet()}.${octet()}.${octet()}.${octet()}`;
-}
-
 async function ChatGptV1(query) {
     try {
-        const response = await fetch(
-            "https://chat-gpt.org/api/text", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "User-Agent": "Mozilla/5.0 (Linux; Android 11; M2004J19C Build/RP1A.200720.011) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.129 Mobile Safari/537.36 WhatsApp/1.2.3",
-                    "Referer": "https://chat-gpt.org/chat",
-                    "X-Forwarded-For": generateRandomIP(),
-                },
-                body: JSON.stringify({
-                    message: query,
-                    temperature: 1,
-                    presence_penalty: 0,
-                    top_p: 1,
-                    frequency_penalty: 0
-                }),
-            }
-        );
-
-        return await response.json();
+        const response = await fetch(`https://shanti.quest/gpt?prompt=${query}`);
+        if (!response.ok) throw new Error('Network response was not OK');
+        return await response.text();
     } catch (error) {
         console.error('Error:', error.message);
     }
 }
+
 
 async function ChatGptV2(query) {
     try {
-        const response = await fetch(
-            "https://chatgpt.org/api/text", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "User-Agent": "Mozilla/5.0 (Linux; Android 11; M2004J19C Build/RP1A.200720.011) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.129 Mobile Safari/537.36 WhatsApp/1.2.3",
-                    "Referer": "https://chat-gpt.org/chat",
-                    "X-Forwarded-For": generateRandomIP(),
-                },
-                body: JSON.stringify({
-                    message: query,
-                    temperature: 1,
-                    presence_penalty: 0,
-                    top_p: 1,
-                    frequency_penalty: 0
-                }),
-            }
-        );
-
-        return await response.json();
-    } catch (error) {
-        console.error('Error:', error.message);
-    }
-}
-
-async function ChatGptV3(query) {
-    try {
-        const response = await fetch(`https://api.caonm.net/api/ai/o.php?msg=${query}`);
+        const response = await fetch(`https://api.yanzbotz.my.id/api/ai/gpt3?query=${query}`);
         if (!response.ok) {
             throw new Error('Network response was not OK');
         }
         const data = await response.json();
-        return data;
+        return data.result;
     } catch (error) {
         console.error('Error:', error);
         throw error;
     }
 }
 
-async function ChatGptV4(query) {
+async function ChatGptV3(query) {
     try {
         const response = await fetch(
             "https://api-inference.huggingface.co/models/gpt2", {
@@ -129,7 +76,6 @@ async function ChatGptV4(query) {
                 }),
             }
         );
-
         return await response.json();
     } catch (error) {
         console.error('Error:', error.message);
