@@ -1,11 +1,10 @@
 export async function before(m) {
 let user = global.db.data.users[m.sender];
-    if (user.banned) return this.reply(m.chat, "Lu olang kena banned ama oe la!", m);
     if (!m.quoted || !m.quoted.fromMe || !m.quoted.isBaileys || !m.text) return true;
     this.registrasi = this.registrasi || {};
     if (!this.registrasi[m.chat] || m.quoted.id != this.registrasi[m.chat].MSG.key.id) return;
     let txt = (m.msg && m.msg.selectedDisplayText ? m.msg.selectedDisplayText : m.text ? m.text : '');
-    if (!txt) return this.reply(m.chat, "Lu masukkan input a!", m);
+    if (!txt) return this.reply(m.chat, "Masukkan input OTP!", m);
     if (txt === this.registrasi[m.chat].OTP) {
         user.name = this.registrasi[m.chat].NAME.trim();
         user.age = this.registrasi[m.chat].AGE;
