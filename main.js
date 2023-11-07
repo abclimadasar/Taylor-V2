@@ -4,10 +4,9 @@ import './config.js';
 import {
     createRequire
 } from "module";
-import {
+import path, {
     join
 } from 'path';
-import path from 'path';
 import {
     fileURLToPath,
     pathToFileURL
@@ -36,7 +35,7 @@ import {
     rmSync,
     watch
 } from 'fs';
-import fs from 'fs/promises';
+
 import yargs from 'yargs';
 import {
     spawn
@@ -48,6 +47,7 @@ import {
     tmpdir
 } from 'os';
 import chokidar from 'chokidar';
+import glob from 'glob';
 import {
     format,
     promisify
@@ -591,6 +591,7 @@ global.reloadHandler = async function(restatConn) {
         conn.ev.off("presence.update", conn.presenceUpdate);
         conn.ev.off('connection.update', conn.connectionUpdate);
         conn.ev.off('creds.update', conn.credsUpdate);
+        conn.ev.off('contacts.upsert', conn.contactsUpdate);
     }
 
     const emoji = {
@@ -629,6 +630,7 @@ global.reloadHandler = async function(restatConn) {
     conn.presenceUpdate = handler.presenceUpdate.bind(global.conn);
     conn.connectionUpdate = connectionUpdate.bind(global.conn);
     conn.credsUpdate = authState.saveCreds.bind(global.conn, true);
+    conn.contactsUpdate = handler.contactsUpdate.bind(global.conn);
 
     const currentDateTime = new Date();
     const messageDateTime = new Date(conn.ev);
@@ -646,37 +648,30 @@ global.reloadHandler = async function(restatConn) {
     conn.ev.on("presence.update", conn.presenceUpdate);
     conn.ev.on('connection.update', conn.connectionUpdate);
     conn.ev.on('creds.update', conn.credsUpdate);
-    
+    conn.ev.on('contacts.upsert', conn.contactsUpdate);
     isInit = false;
     return true;
 };
 
 global.plugins = {};
 const pluginFilter = (filename) => /\.js$/.test(filename);
-
 async function filesInit() {
-    const directory = './plugins';
-    try {
-        const CommandsFiles = await getJSFiles(path.join(__dirname, directory));
-
-        for (let file of CommandsFiles) {
-            try {
-                const module = await import(file);
-                global.plugins[file] = module.default || module;
-            } catch (e) {
-                conn.logger.error(e);
-                delete global.plugins[file];
-            }
+    const CommandsFiles = glob.sync("./plugins/**/*.js");
+    for (let file of CommandsFiles) {
+        try {
+            const module = await import(file);
+            global.plugins[file] = module.default || module;
+        } catch (e) {
+            conn.logger.error(e);
+            delete global.plugins[file];
         }
-    } catch (e) {
-        conn.logger.error(e);
     }
 }
 filesInit()
     .then(async (_) => {
-        console.log("Load " + (Object.keys(global.plugins)).length + " File JS total.");
+        console.log("Load " + (Object.keys(global.plugins)).length + " plugins total.");
         await conn.sendMessage(nomorown + "@s.whatsapp.net", {
-                text: "Successfully load " + (Object.keys(global.plugins)).length + " JS plugins",
+                text: "Bot Successfully Load Plugins",
                 mentions: [nomorown + "@s.whatsapp.net", conn.user.jid]
             }, {
                 quoted: null
@@ -686,25 +681,6 @@ filesInit()
             });
     })
     .catch(console.error);
-    
-async function getJSFiles(directory) {
-    const files = await fs.readdir(directory);
-    const jsFiles = [];
-
-    for (let file of files) {
-        const filePath = path.join(directory, file);
-        const stat = await fs.stat(filePath);
-
-        if (stat.isFile() && path.extname(file) === '.js') {
-            jsFiles.push(filePath);
-        } else if (stat.isDirectory()) {
-            const nestedJSFiles = await getJSFiles(filePath);
-            jsFiles.push(...nestedJSFiles);
-        }
-    }
-
-    return jsFiles;
-}
 
 function FileEv(type, file) {
     const filename = async (file) => file.replace(/^.*[\\\/]/, "");
