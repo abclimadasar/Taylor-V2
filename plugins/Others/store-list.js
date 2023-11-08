@@ -1,21 +1,32 @@
-let handler = async (m, { conn, usedPrefix, command }) => {
-	let who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender
-	let name = await conn.getName(who)
-	let chat = global.db.data.chats[m.chat]
-	let msgs = global.db.data.msgs
-	let msg = (Object.entries(msgs).map(([nama, isi]) => { return { nama, ...isi} }))
-	let listSections = []
-	Object.values(msg).map((v, index) => {
-	listSections.push([htki + " " + ++index + " " + htka, [
-          ["Pesan: " + v.nama, usedPrefix + "getmsg " + v.nama, "\n\n" + htjava + "\n" + dmenub + " *ID:* " + v.key.id + "\n" + dmenub + " *Type:* " + Object.keys(v.message) + "\n" + dmenub + " *Jid:* " + (v.key.remoteJid).replace(/@.+/, "") + "\n" + dmenuf]
-        ]])
-	})
-	if (chat.getmsg === false) return conn.reply(m.chat, "kamu harus mengaktifkan getmsg dengan mengetik *.on getmsg*", m)
-	if (msg[0]) return conn.sendList(m.chat, htki + " 📺 LIST MESSAGE 🔎 " + htka, "⚡ Hai " + name + "Berikut daftar Menu yg Ada di List store...\nAkses langsung dengan mengetik namanya", author, "☂️ " + command + " Klik Disini ☂️", listSections, m)
-	else return throw "Belum ada Menu yg Ada di list store.\nketik *" + usedPrefix + " addlist <teks>* untuk menambahkan daftar menu."
-}
-handler.help = ["store"].map(v => "list" + v)
-handler.tags = ["database"]
-handler.command = ["liststore"]
+const handler = async (m, { conn, usedPrefix, command }) => {
+  const who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender;
+  const name = await conn.getName(who);
+  const chat = global.db.data.chats[m.chat];
+  const msgs = global.db.data.msgs;
+  const msg = Object.entries(msgs).map(([nama, isi]) => ({ nama, ...isi }));
 
-export default handler
+  if (chat.getmsg === false) {
+    await m.reply("Kamu harus mengaktifkan getmsg dengan mengetik *.on getmsg*");
+  } else if (msg[0]) {
+    const pesanList = [`⚡ Hai ${name}, berikut daftar Menu yang ada di List store...`, 'Akses langsung dengan mengetik namanya'];
+    
+    for (let i = 0; i < msg.length; i++) {
+      pesanList.push(`${htki} ${i + 1} ${htka}`);
+      pesanList.push(`Pesan: ${msg[i].nama}\n${usedPrefix}getmsg ${msg[i].nama}\n\n${htjava}`);
+      pesanList.push(`${dmenub} *ID:* ${msg[i].key.id}`);
+      pesanList.push(`${dmenub} *Type:* ${Object.keys(msg[i].message)}`);
+      pesanList.push(`${dmenub} *Jid:* ${msg[i].key.remoteJid.replace(/@.+/, "")}\n${dmenuf}`);
+    }
+    
+    await m.reply(pesanList.join('\n'));
+    await m.reply(`☂️ ${command} Klik Disini ☂️`);
+  } else {
+    throw new Error("Belum ada Menu yang ada di list store.\nKetik *${usedPrefix} addlist <teks>* untuk menambahkan daftar menu.");
+  }
+};
+
+handler.help = ["store"].map(v => `list${v}`);
+handler.tags = ["database"];
+handler.command = ["liststore"];
+
+export default handler;
