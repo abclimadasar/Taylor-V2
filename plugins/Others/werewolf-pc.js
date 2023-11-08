@@ -1,5 +1,5 @@
 import {
-    sesi: getSesi,
+    sesi as getSesi,
     playerOnGame,
     dataPlayer,
     getPlayerById2,
