@@ -3,17 +3,17 @@ import cheerio from 'cheerio';
 import PhoneNumber from 'awesome-phonenumber';
 
 let handler = async (m, { conn, text }) => {
-  if (!text) return m.reply("Masukkan Nomor!");
+  if (!text) return conn.reply(m.chat, "Masukkan Nomor!", null);
 
   const number = text.replace(/[^0-9]/g, "").replace(/^08/, "62");
-  if (!number.startsWith("62")) return m.reply("Only INDONESIA number!");
+  if (!number.startsWith("62")) return conn.reply(m.chat, "Only INDONESIA number!", null);
 
-  if (number + "@s.whatsapp.net" === conn.user.jid) return m.reply("Is that bot number ?");
+  if (number + "@s.whatsapp.net" === conn.user.jid) return conn.reply(m.chat, "Is that bot number ?", null);
 
   const isValid = await conn.isOnWhatsApp(number + "@s.whatsapp.net");
-  if (!isValid) return m.reply("Number not in WhatsApp!");
+  if (!isValid) return conn.reply(m.chat, "Number not in WhatsApp!", null);
 
-  const text = PhoneNumber("+" + number).getNumber("international");
+  const internationalNumber = PhoneNumber("+" + number).getNumber("international");
 
   try {
     const { data, headers } = await axios.get("https://www.whatsapp.com/contact/noclient/");
@@ -26,7 +26,7 @@ let handler = async (m, { conn, text }) => {
       lsd: $form.find("input[name=lsd]").val(),
       step: "submit",
       country_selector: "INDONESIA",
-      phone_number: text,
+      phone_number: internationalNumber,
       email,
       email_confirm: email,
       platform: "ANDROID",
@@ -46,20 +46,20 @@ let handler = async (m, { conn, text }) => {
     const payload = String(resData);
 
     if (payload.includes(`"payload":true`)) {
-      m.reply(`WhatsApp Support
+      conn.reply(m.chat, `WhatsApp Support
 Hai,
 Terima kasih atas pesan Anda.
-Kami telah mengaktifkan kembali akun anda.`.trim());
+Kami telah mengaktifkan kembali akun anda.`, null);
     } else if (payload.includes(`"payload":false`)) {
-      m.reply(`Halo, 
+      conn.reply(m.chat, `Halo, 
 Kami menerima pesan Anda.
 Kami tahu bahwa saat ini Anda tidak memiliki akses ke WhatsApp dan kami sedang bekerja
 untuk memenuhi pesanan Anda.
 Kami berterima kasih atas kesabaran Anda dan akan menghubungi Anda sesegera mungkin.
-Untuk informasi lebih lanjut, silakan baca peraturan kami.`.trim());
-    } else m.reply(await import("utils").format(resData));
+Untuk informasi lebih lanjut, silakan baca peraturan kami.`, null);
+    } else conn.reply(m.chat, await import("utils").format(resData), null);
   } catch (err) {
-    m.reply(`${err}`);
+    conn.reply(m.chat, `${err}`, null);
   }
 };
 
