@@ -21,7 +21,7 @@ const handler = async (m, { conn, usedPrefix, command }) => {
     await m.reply(pesanList.join('\n'));
     await m.reply(`☂️ ${command} Klik Disini ☂️`);
   } else {
-    throw new Error("Belum ada Menu yang ada di list store.\nKetik *${usedPrefix} addlist <teks>* untuk menambahkan daftar menu.");
+    return m.reply("Belum ada Menu yang ada di list store.\nKetik *${usedPrefix} addlist <teks>* untuk menambahkan daftar menu.");
   }
 };
 

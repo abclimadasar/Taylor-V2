@@ -1,9 +1,9 @@
 let handler = async (m, { text, usedPrefix, command }) => {
-  if (!text) throw new Error("Gunakan *" + usedPrefix + "liststore* untuk melihat daftar pesan yg tersimpan.");
+  if (!text) return m.reply("Gunakan *" + usedPrefix + "liststore* untuk melihat daftar pesan yg tersimpan.");
   let msgs = global.db.data.msgs;
-  if (!(text in msgs)) throw new Error("[ " + text + " ] tidak terdaftar di daftar pesan.");
+  if (!(text in msgs)) return m.reply("[ " + text + " ] tidak terdaftar di daftar pesan.");
   delete msgs[text];
-  throw new Error("[💬] berhasil menghapus pesan di daftar List dengan nama >\n" + text);
+  return m.reply("[💬] berhasil menghapus pesan di daftar List dengan nama >\n" + text);
 };
 
 handler.help = ["store"].map(v => "del" + v + " <teks>");
