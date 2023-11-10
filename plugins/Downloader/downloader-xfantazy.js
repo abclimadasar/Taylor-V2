@@ -88,7 +88,7 @@ async function getXfantazy(id) {
   }`;
 
   try {
-    const response = await fetch("https://xfantazy.com/graphql", {
+    const response = await fetch("https://thefantazy.com/graphql", {
       method: 'POST',
       headers: {
         'Accept': '*/*',
@@ -107,9 +107,9 @@ async function getXfantazy(id) {
       }),
     });
 
-    const data = await response.json();
-
-    return data.data.getVideoSources.sources[0].src;
+    const data = await response.text();
+    const parsedData = JSON.parse(data)
+    return parsedData.data.getVideoSources.sources[0].src;
   } catch (error) {
     console.error('Error fetching video source:', error);
     return null;
