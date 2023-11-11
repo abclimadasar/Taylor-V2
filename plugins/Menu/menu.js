@@ -320,7 +320,7 @@ let handler = async (m, {
             readmore: readMore
         }
         text = text.replace(new RegExp(`%(${Object.keys(replace).sort((a, b) => b.length - a.length).join`|`})`, "g"), (_, name) => "" + replace[name])
-        let pp = logo || fla + "menu " + teks
+        let pp = [thumbdoc, thumb].getRandom() || fla + "menu " + teks
 
         //------------------< MENU >----------------
         /*
@@ -377,14 +377,11 @@ let handler = async (m, {
         */
         
         // Biasa
-        await conn.sendMessage(m.chat, {
-	document: Buffer.alloc(0),
+        await conn.sendFile(m.chat, Buffer.alloc(0), "D A S H B O A R D", caption, fakes, null, {
 	mimetype: [dpptx, ddocx, dxlsx, dpdf, drtf].getRandom(),
-	fileName: "D A S H B O A R D",
 	fileLength: fsizedoc,
 	pageCount: fpagedoc,
-	caption: caption,
-	jpegThumbnail: await conn.resize(thumbdoc, 300, 150),
+	jpegThumbnail: await conn.resize([thumbdoc, thumb].getRandom(), 300, 150),
 	contextInfo: {
 		mentionedJid: [m.sender],
 		externalAdReply: {
@@ -393,14 +390,11 @@ let handler = async (m, {
 			mediaType: 1,
 			mediaUrl: sgc,
 			renderLargerThumbnail: true,
-			sourceUrl: null,
-			thumbnail: await (await conn.getFile(thumb)).data,
-			thumbnailUrl: thumb,
-			title: `${ucapan()} ${m.name}`
+			thumbnail: await conn.resize([thumbdoc, thumb].getRandom(), 350, 200),
+			thumbnailUrl: [thumbdoc, thumb].getRandom(),
+			title: `${ucapan} ${m.name}`
 		}
 	}
-}, {
-	quoted: m
 })
     await conn.sendReact(m.chat, "✅", m.key)
         // Biasa

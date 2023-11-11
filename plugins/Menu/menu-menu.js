@@ -90,21 +90,14 @@ let handler = async (m, {
 		"yoyowaimo"
 	].getRandom()
 	var vn = "https://raw.githubusercontent.com/AyGemuy/HAORI-API/main/audio/" + soun + ".mp3"
-	var gamb = [
-		thumb,
-		logo
-	].getRandom()
 
 	const caption = `*👋 Selamat datang di dashboard bot kami*!\n\n - Kami berharap Anda akan menikmati pengalaman berinteraksi dengan bot kami yang ramah dan intuitif.${readMore}\n\n - Kami telah menyertakan berbagai fitur yang dapat membantu Anda mengelola dan meningkatkan kinerja bot Anda.\n\n - Kami berharap Anda akan menikmati menggunakan dashboard bot kami dan semoga Anda mendapatkan manfaat dari fitur-fitur yang kami tawarkan.\n\n\n*[ LIST MENU ]*\n  - ${usedPrefix}menulist\n  - ${usedPrefix}allmenu\n\n`;
 
-	await conn.sendMessage(m.chat, {
-	document: Buffer.alloc(0),
+	await conn.sendFile(m.chat, Buffer.alloc(0), "D A S H B O A R D", caption, fakes, null, {
 	mimetype: [dpptx, ddocx, dxlsx, dpdf, drtf].getRandom(),
-	fileName: "D A S H B O A R D",
 	fileLength: fsizedoc,
 	pageCount: fpagedoc,
-	caption: caption,
-	jpegThumbnail: await conn.resize(thumbdoc, 300, 150),
+	jpegThumbnail: await conn.resize([thumbdoc, thumb].getRandom(), 300, 150),
 	contextInfo: {
 		mentionedJid: [m.sender],
 		externalAdReply: {
@@ -113,14 +106,11 @@ let handler = async (m, {
 			mediaType: 1,
 			mediaUrl: sgc,
 			renderLargerThumbnail: true,
-			sourceUrl: null,
-			thumbnail: await (await conn.getFile(thumb)).data,
-			thumbnailUrl: thumb,
-			title: `${ucapan()} ${m.name}`
+			thumbnail: await conn.resize([thumbdoc, thumb].getRandom(), 350, 200),
+			thumbnailUrl: [thumbdoc, thumb].getRandom(),
+			title: `${ucapan} ${m.name}`
 		}
 	}
-}, {
-	quoted: m
 })
 	await conn.sendPresenceUpdate('recording', m.chat);
 	await conn.sendFile(m.chat, vn, '', null, m, true, {

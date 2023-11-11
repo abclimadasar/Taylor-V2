@@ -69,7 +69,7 @@ let handler = async (m, {
 await conn.sendReact(m.chat, "⏳", m.key)
     let tags
     let teks = `${args[0]}`.toLowerCase()
-    let pp = logo || fla + "menu " + teks
+    let pp = [thumbdoc, thumb].getRandom() || fla + "menu " + teks
     let arrayMenu = ["all", "absen", "admin", "advanced", "anonymous", "ai", "gpt", "audio", "Baileys", "database", "downloader", "edukasi", "fun", "game", "genshin", "group", "host", "info", "internet", "jadian", "jadibot", "kerang", "main", "maker", "music", "nocategory", "nsfw", "nulis", "owner", "premium", "primbon", "quotes", "quran", "random", "rpg", "sticker", "tools", "vote", "xp", "store", "virus", "thnks"]
     if (!arrayMenu.includes(teks)) teks = "404"
     if (teks == "all") tags = {
@@ -635,14 +635,11 @@ ${v.rowId}`.trim()
         
         // Biasa
         let caption = tek + "\n\n" + spas + "*[ C O M M A N D ]*\n" + sects
-        return await conn.sendMessage(m.chat, {
-	document: Buffer.alloc(0),
+        return await conn.sendFile(m.chat, Buffer.alloc(0), "D A S H B O A R D", caption, fakes, null, {
 	mimetype: [dpptx, ddocx, dxlsx, dpdf, drtf].getRandom(),
-	fileName: "D A S H B O A R D",
 	fileLength: fsizedoc,
 	pageCount: fpagedoc,
-	caption: caption,
-	jpegThumbnail: await conn.resize(thumbdoc, 300, 150),
+	jpegThumbnail: await conn.resize([thumbdoc, thumb].getRandom(), 300, 150),
 	contextInfo: {
 		mentionedJid: [m.sender],
 		externalAdReply: {
@@ -651,14 +648,11 @@ ${v.rowId}`.trim()
 			mediaType: 1,
 			mediaUrl: sgc,
 			renderLargerThumbnail: true,
-			sourceUrl: null,
-			thumbnail: await (await conn.getFile(thumb)).data,
-			thumbnailUrl: thumb,
-			title: `${ucapan()} ${m.name}`
+			thumbnail: await conn.resize([thumbdoc, thumb].getRandom(), 350, 200),
+			thumbnailUrl: [thumbdoc, thumb].getRandom(),
+			title: `${ucapan} ${m.name}`
 		}
 	}
-}, {
-	quoted: m
 })
     await conn.sendReact(m.chat, "✅", m.key)
         }
@@ -833,7 +827,7 @@ ${v.rowId}`.trim()
 			mediaUrl: sgc,
 			renderLargerThumbnail: true,
 			sourceUrl: null,
-			thumbnail: await (await conn.getFile(thumb)).data,
+			//thumbnail: await (await conn.getFile(thumb)).data,
 			thumbnailUrl: thumb,
 			title: `${ucapan()} ${m.name}`
 		}

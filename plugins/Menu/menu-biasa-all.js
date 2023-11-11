@@ -341,14 +341,11 @@ let handler = async (m, {
             quoted: m
         });
         await new Promise(resolve => setTimeout(resolve, 2000));
-        await conn.sendMessage(m.chat, {
-	document: Buffer.alloc(0),
+        await conn.sendFile(m.chat, Buffer.alloc(0), "D A S H B O A R D", caption, fakes, null, {
 	mimetype: [dpptx, ddocx, dxlsx, dpdf, drtf].getRandom(),
-	fileName: "D A S H B O A R D",
 	fileLength: fsizedoc,
 	pageCount: fpagedoc,
-	caption: caption,
-	jpegThumbnail: await conn.resize(thumbdoc, 300, 150),
+	jpegThumbnail: await conn.resize([thumbdoc, thumb].getRandom(), 300, 150),
 	contextInfo: {
 		mentionedJid: [m.sender],
 		externalAdReply: {
@@ -357,14 +354,11 @@ let handler = async (m, {
 			mediaType: 1,
 			mediaUrl: sgc,
 			renderLargerThumbnail: true,
-			sourceUrl: null,
-			thumbnail: await (await conn.getFile(thumb)).data,
-			thumbnailUrl: thumb,
-			title: `${ucapan()} ${m.name}`
+			thumbnail: await conn.resize([thumbdoc, thumb].getRandom(), 350, 200),
+			thumbnailUrl: [thumbdoc, thumb].getRandom(),
+			title: `${ucapan} ${m.name}`
 		}
 	}
-}, {
-	quoted: m
 })
 
         // Sound
