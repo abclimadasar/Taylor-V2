@@ -71,9 +71,9 @@ global.htjava = pickRandom(["乂", "⛶", "❏", "⫹⫺", "☰", "⎔", "✦", 
 global.wm = "                「 ᴛᴀyʟᴏʀ-ʙᴏᴛ あ⁩ 」"
 global.wm2 = "꒷︶꒷꒥꒷ ‧₊˚ ꒰ฅ˘օառɛʀ˘ฅ ꒱ ‧₊˚꒷︶꒷꒥꒷"
 global.wm3 = htjava + " ᴛᴀyʟᴏʀ-ʙᴏᴛ"
-global.botdate = `${htjava} Date :  ${moment.tz("Asia/Jakarta").format("DD/MM/YY")}`
-global.bottime = `𝗧 𝗜 𝗠 𝗘 : ${moment.tz("Asia/Jakarta").format("HH:mm:ss")}`
-global.titlebot = `${htjava} Time Sever : ${moment.tz("Asia/Jakarta").format("HH:mm:ss")}\n⫹⫺ Date Server :  ${moment.tz("Asia/Jakarta").format("DD/MM/YY")}`
+global.botdate = `${htjava} Date :  ${moment.tz("Asia/Makassar").format("DD/MM/YY")}`
+global.bottime = `𝗧 𝗜 𝗠 𝗘 : ${moment.tz("Asia/Makassar").format("HH:mm:ss")}`
+global.titlebot = `${htjava} Time Sever : ${moment.tz("Asia/Makassar").format("HH:mm:ss")}\n⫹⫺ Date Server :  ${moment.tz("Asia/Makassar").format("DD/MM/YY")}`
 
 /*Thumbnail*/
 global.giflogo = VideoGalau()
@@ -178,9 +178,9 @@ global.adReplyS = {
     fileLength: SizeDoc(),
     seconds: SizeDoc(),
     contextInfo: {
+    mentionedJid: ["0@s.whatsapp.net"],
         forwardingScore: SizeDoc(),
         externalAdReply: {
-            // showAdAttribution: true,
             title: "📍 " + Sapa() + Pagi(),
             body: author,
             mediaUrl: sgc,
@@ -196,6 +196,7 @@ global.adReply = {
     fileLength: SizeDoc(),
     seconds: SizeDoc(),
     contextInfo: {
+    mentionedJid: ["0@s.whatsapp.net"],
         forwardingScore: SizeDoc(),
         externalAdReply: {
             body: author,
@@ -203,11 +204,10 @@ global.adReply = {
             mediaType: 1,
             mediaUrl: sgc,
             renderLargerThumbnail: true,
-            // showAdAttribution: true,
             sourceId: "𝑾𝒖𝒅𝒚𝒔𝒐𝒇𝒕",
             sourceType: "PDF",
             previewType: "PDF",
-            sourceUrl: sgc,
+            sourceUrl: null,
             thumbnail: await fs.readFileSync("./thumbnail.jpg"),
             thumbnailUrl: logo,
             title: "📍 " + Sapa() + Pagi()
@@ -217,38 +217,38 @@ global.adReply = {
 /* Fake IG */
 global.fakeig = {
     contextInfo: {
+    mentionedJid: ["0@s.whatsapp.net"],
         externalAdReply: {
-            // showAdAttribution: true,
             mediaUrl: sig,
             mediaType: "VIDEO",
             description: "Follow: " + sig,
             title: "📍 " + Sapa() + Pagi(),
             body: author,
             thumbnailUrl: logo,
-            sourceUrl: sgc
+            sourceUrl: null
         }
     }
 }
 /* Fake FB */
 global.fakefb = {
     contextInfo: {
+    mentionedJid: ["0@s.whatsapp.net"],
         externalAdReply: {
-            // showAdAttribution: true,
             mediaUrl: sfb,
             mediaType: "VIDEO",
             description: "Follow: " + sig,
             title: "📍 " + Sapa() + Pagi(),
             body: author,
             thumbnailUrl: logo,
-            sourceUrl: sgc
+            sourceUrl: null
         }
     }
 }
 /* Fake TT */
 global.faketik = {
     contextInfo: {
+    mentionedJid: ["0@s.whatsapp.net"],
         externalAdReply: {
-            // showAdAttribution: true,
             mediaUrl: snh,
             mediaType: "VIDEO",
             description: "Follow: " + sig,
@@ -262,8 +262,8 @@ global.faketik = {
 /* Fake YT */
 global.fakeyt = {
     contextInfo: {
+    mentionedJid: ["0@s.whatsapp.net"],
         externalAdReply: {
-            // showAdAttribution: true,
             mediaUrl: syt,
             mediaType: "VIDEO",
             description: "Follow: " + sig,
@@ -399,32 +399,19 @@ watchFile(file, () => {
 
 /* Selamat Pagi */
 function Pagi() {
-    let waktunya = moment.tz("Asia/Jakarta").format("HH")
-    let ucapin = "Selamat malam 🌙"
-    if (waktunya >= 1) {
-        ucapin = "Selamat Pagi 🗿"
-    }
-    if (waktunya >= 4) {
-        ucapin = "Selamat pagi 🌄"
-    }
-    if (waktunya > 10) {
-        ucapin = "Selamat siang ☀️"
-    }
-    if (waktunya >= 15) {
-        ucapin = "Selamat sore 🌅"
-    }
-    if (waktunya >= 18) {
-        ucapin = "Selamat malam 🌙"
-    }
-    if (waktunya >= 24) {
-        ucapin = "Selamat Begadang 🗿"
-    }
-    return ucapin
+    let waktunya = moment.tz("Asia/Makassar").format("HH");
+    return waktunya >= 24 ? "Selamat Begadang 🗿" :
+           waktunya >= 18 ? "Selamat malam 🌙" :
+           waktunya >= 15 ? "Selamat sore 🌅" :
+           waktunya > 10 ? "Selamat siang ☀️" :
+           waktunya >= 4 ? "Selamat pagi 🌄" :
+           "Selamat Pagi 🗿";
 }
 
 /* Randomizer */
 function pickRandom(list) {
-    return list[Math.floor(Math.random() * list.length)]
+    const shuffledList = list.slice().sort(() => Math.random() - 0.5);
+    return shuffledList[Math.floor(Math.random() * shuffledList.length)];
 }
 
 /* Img Array */
