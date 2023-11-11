@@ -342,12 +342,30 @@ let handler = async (m, {
         });
         await new Promise(resolve => setTimeout(resolve, 2000));
         await conn.sendMessage(m.chat, {
-            text: caption,
-            edit: key,
-            mentions: conn.parseMention(caption)
-        }, {
-            quoted: m
-        });
+	document: Buffer.alloc(0),
+	mimetype: [dpptx, ddocx, dxlsx, dpdf, drtf].getRandom(),
+	fileName: "D A S H B O A R D",
+	fileLength: fsizedoc,
+	pageCount: fpagedoc,
+	caption: caption,
+	jpegThumbnail: await conn.resize(thumbdoc, 300, 150),
+	contextInfo: {
+		mentionedJid: [m.sender],
+		externalAdReply: {
+			body: bottime,
+			containsAutoReply: true,
+			mediaType: 1,
+			mediaUrl: sgc,
+			renderLargerThumbnail: true,
+			sourceUrl: null,
+			thumbnail: await (await conn.getFile(thumb)).data,
+			thumbnailUrl: thumb,
+			title: ucapan + " " + m.name
+		}
+	}
+}, {
+	quoted: m
+})
 
         // Sound
         var vn = "https://raw.githubusercontent.com/AyGemuy/HAORI-API/main/audio/bot.mp3"

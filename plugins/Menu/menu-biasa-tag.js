@@ -620,19 +620,30 @@ ${v.rowId}`.trim()
         // Biasa
         let caption = tek + "\n\n" + spas + "*[ C O M M A N D ]*\n" + sects
         return await conn.sendMessage(m.chat, {
-        text: caption,
-        contextInfo: {
-            externalAdReply: {
-                title: wm,
-                mediaType: 1,
-                renderLargerThumbnail: true,
-                thumbnail: await conn.resize(pp, 300, 175),
-                sourceUrl: "",
-                mediaUrl: pp,
-            },
-            mentionedJid: [m.sender],
-        },
-    });
+	document: Buffer.alloc(0),
+	mimetype: [dpptx, ddocx, dxlsx, dpdf, drtf].getRandom(),
+	fileName: "D A S H B O A R D",
+	fileLength: fsizedoc,
+	pageCount: fpagedoc,
+	caption: caption,
+	jpegThumbnail: await conn.resize(thumbdoc, 300, 150),
+	contextInfo: {
+		mentionedJid: [m.sender],
+		externalAdReply: {
+			body: bottime,
+			containsAutoReply: true,
+			mediaType: 1,
+			mediaUrl: sgc,
+			renderLargerThumbnail: true,
+			sourceUrl: null,
+			thumbnail: await (await conn.getFile(thumb)).data,
+			thumbnailUrl: thumb,
+			title: ucapan + " " + m.name
+		}
+	}
+}, {
+	quoted: m
+})
     await conn.sendReact(m.chat, "✅", m.key)
         }
 
@@ -737,19 +748,30 @@ ${v.rowId}`.trim()
         //------------------< MENU >----------------
         let caption = text.trim()
         await conn.sendMessage(m.chat, {
-        text: caption,
-        contextInfo: {
-            externalAdReply: {
-                title: wm,
-                mediaType: 1,
-                renderLargerThumbnail: true,
-                thumbnail: await conn.resize(pp, 300, 175),
-                sourceUrl: "",
-                mediaUrl: pp,
-            },
-            mentionedJid: [m.sender],
-        },
-    });
+	document: Buffer.alloc(0),
+	mimetype: [dpptx, ddocx, dxlsx, dpdf, drtf].getRandom(),
+	fileName: "D A S H B O A R D",
+	fileLength: fsizedoc,
+	pageCount: fpagedoc,
+	caption: caption,
+	jpegThumbnail: await conn.resize(thumbdoc, 300, 150),
+	contextInfo: {
+		mentionedJid: [m.sender],
+		externalAdReply: {
+			body: bottime,
+			containsAutoReply: true,
+			mediaType: 1,
+			mediaUrl: sgc,
+			renderLargerThumbnail: true,
+			sourceUrl: null,
+			thumbnail: await (await conn.getFile(thumb)).data,
+			thumbnailUrl: thumb,
+			title: ucapan + " " + m.name
+		}
+	}
+}, {
+	quoted: m
+})
 
         // Sound
         var vn = "https://raw.githubusercontent.com/AyGemuy/HAORI-API/main/audio/bot.mp3"
