@@ -396,7 +396,7 @@ let handler = async (m, {
 			sourceUrl: null,
 			thumbnail: await (await conn.getFile(thumb)).data,
 			thumbnailUrl: thumb,
-			title: ucapan + " " + m.name
+			title: `${ucapan()} ${m.name}`
 		}
 	}
 }, {
@@ -441,19 +441,11 @@ function clockStringP(ms) {
 }
 
 function ucapan() {
-    const time = moment.tz("Asia/Makassar").format("HH")
-    let res = "Selamat DiniHari ☀️"
-    if (time >= 4) {
-        res = "Good Morning 🌄"
-    }
-    if (time >= 10) {
-        res = "Good Afternoon ☀️"
-    }
-    if (time >= 15) {
-        res = "Good Afternoon 🌇"
-    }
-    if (time >= 18) {
-        res = "Good Night 🌙"
-    }
-    return res
+    let waktunya = moment.tz("Asia/Makassar").format("HH");
+    return waktunya >= 24 ? "Selamat Begadang 🗿" :
+           waktunya >= 18 ? "Selamat malam 🌙" :
+           waktunya >= 15 ? "Selamat sore 🌅" :
+           waktunya > 10 ? "Selamat siang ☀️" :
+           waktunya >= 4 ? "Selamat pagi 🌄" :
+           "Selamat Pagi 🗿";
 }

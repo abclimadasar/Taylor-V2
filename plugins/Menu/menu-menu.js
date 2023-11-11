@@ -2,6 +2,7 @@
 import {
 	generateWAMessageFromContent
 } from "@adiwajshing/baileys"
+import moment from "moment-timezone"
 
 let handler = async (m, {
 	conn,
@@ -115,7 +116,7 @@ let handler = async (m, {
 			sourceUrl: null,
 			thumbnail: await (await conn.getFile(thumb)).data,
 			thumbnailUrl: thumb,
-			title: ucapan + " " + m.name
+			title: `${ucapan()} ${m.name}`
 		}
 	}
 }, {
@@ -136,3 +137,13 @@ export default handler
 
 const more = String.fromCharCode(8206)
 const readMore = more.repeat(4001)
+
+function ucapan() {
+    let waktunya = moment.tz("Asia/Makassar").format("HH");
+    return waktunya >= 24 ? "Selamat Begadang 🗿" :
+           waktunya >= 18 ? "Selamat malam 🌙" :
+           waktunya >= 15 ? "Selamat sore 🌅" :
+           waktunya > 10 ? "Selamat siang ☀️" :
+           waktunya >= 4 ? "Selamat pagi 🌄" :
+           "Selamat Pagi 🗿";
+}
