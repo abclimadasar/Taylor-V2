@@ -634,7 +634,7 @@ ${v.rowId}`.trim()
 			renderLargerThumbnail: true,
 			thumbnail: await conn.resize([thumbdoc, thumb].getRandom(), 350, 200),
 			thumbnailUrl: [thumbdoc, thumb].getRandom(),
-			title: `${ucapan} ${m.name}`
+			title: `${ucapan()} ${m.name}`
 		}
 	}
 })
@@ -756,7 +756,7 @@ ${v.rowId}`.trim()
 			renderLargerThumbnail: true,
 			thumbnail: await conn.resize([thumbdoc, thumb].getRandom(), 350, 200),
 			thumbnailUrl: [thumbdoc, thumb].getRandom(),
-			title: `${ucapan} ${m.name}`
+			title: `${ucapan()} ${m.name}`
 		}
 	}
 })
