@@ -681,8 +681,7 @@ async function filesInit() {
                 "\n*Total Plugins:* " + CommandsFiles.length +
                 "\n*Success:* " + successMessages.length +
                 "\n*Error:* " + errorMessages.length +
-                "\n*Error List:*\n" + errorMessages.map((v, i) => (i + 1) + ". " + v).join('\n'),
-            mentions: [nomorown + "@s.whatsapp.net", conn.user.jid]
+                "\n*Error List:*\n" + errorMessages.map((v, i) => (i + 1) + ". " + v).join('\n')
         }, {
             quoted: null
         });
