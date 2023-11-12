@@ -4,43 +4,42 @@ const exec = promisify(execCallback);
 
 const handler = async (m, { conn }) => {
   try {
-  await conn.reply(m.chat, 'Please wait, conducting speed test...', m);
-    const testData = await executeCommands(['python3 speed.py --share --json']);
-    if (!testData) return conn.reply(m.chat, 'Error during speedtest', m);
+    const { stdout, stderr } = await exec('python3 speed.py --share --json');
+
     const {
-      server,
       download,
       upload,
+      ping,
+      server,
       client,
       timestamp,
       bytes_sent,
       bytes_received,
-    } = testData;
-    
-    const resultMessage = `
-🔭 Testing From ${client.isp}...
-📑 Retrieving speedtest.net server list...
-🔎 Selecting best server based on ping...
+      share,
+    } = JSON.parse(stdout.match(/\{(.|\n)*\}/)[0]);
 
-🏬 *Hosted By:* ${server.sponsor}
-🌎 *Location:* ${server.name} [${server.d.toFixed(2)} km] 
-⚡ *Ping:* ${server.latency.toFixed(3)} ms
+    const message = `
+*🚀 Download Speed*: ${formatSpeed(download)} Mbps
+*📤 Upload Speed*: ${formatSpeed(upload)} Mbps
+*⏱️ Ping*: ${ping} ms
 
-*Download Speed:* ${formatSpeed(download)} Mbps
-*Upload Speed:* ${formatSpeed(upload)} Mbps
+*Server Details*:
+  *Name*: ${server.name}
+  *Country*: ${server.country}
+  *Sponsor*: ${server.sponsor}
 
-*Client Info:*
-  *IP:* ${client.ip}
-  *ISP:* ${client.isp}
-  *ISP Rating:* ${client.isprating}
-  *Country:* ${client.country}
+*Client Details*:
+  *IP*: ${client.ip}
+  *ISP*: ${client.isp}
+  *Country*: ${client.country}
 
-*Timestamp:* ${formatTimestamp(timestamp)}
-*Bytes Sent:* ${formatBytes(bytes_sent)}
-*Bytes Received:* ${formatBytes(bytes_received)}
-    `;
+*📅 Timestamp*: ${formatTimestamp(timestamp)}
+*💾 Bytes Sent*: ${formatBytes(bytes_sent)}
+*💽 Bytes Received*: ${formatBytes(bytes_received)}
+*🔗 Share Link*: ${share}
+`;
 
-    await conn.reply(m.chat, resultMessage, m, {
+    await conn.reply(m.chat, message, m, {
       contextInfo: {
         mentionedJid: [m.sender],
         externalAdReply: {
@@ -51,15 +50,14 @@ const handler = async (m, { conn }) => {
           renderLargerThumbnail: true,
           showAdAttribution: true,
           sourceUrl: 'https://www.speedtest.net/id',
-          thumbnail: (await conn.getFile(testData.share)).data,
-          thumbnailUrl: testData.share,
+          thumbnail: await conn.resize(share, 350, 200),
+          thumbnailUrl: share,
           title: htki + " O O K L A " + htka,
         },
       },
     });
   } catch (error) {
-    console.error(error);
-    conn.reply(m.chat, 'Error during speedtest', m);
+    console.error('Terjadi kesalahan:', error.message);
   }
 };
 
@@ -68,20 +66,6 @@ handler.tags = ['info'];
 handler.command = /^(speedtest)$/i;
 
 export default handler;
-
-async function executeCommands(commands) {
-  try {
-    const combinedOutput = await Promise.all(commands.map(async (command) => {
-      const { stdout } = await exec(command);
-      return stdout;
-    }));
-    const jsonString = combinedOutput.join('').match(/{[^]*}/)[0];
-    return JSON.parse(jsonString);
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-}
 
 function formatSpeed(speed) {
   return (speed / (1024 * 1024)).toFixed(2);
@@ -94,6 +78,10 @@ function formatTimestamp(timestamp) {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+    timeZoneName: 'short',
   };
   return new Intl.DateTimeFormat('en-US', options).format(date);
 }
