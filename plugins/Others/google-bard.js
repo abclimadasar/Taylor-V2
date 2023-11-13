@@ -25,7 +25,12 @@ let handler = async (m, {
 				let res = await GoogleBardApiV2(text)
 				await m.reply(res);
 			} catch (e) {
-				await m.reply(eror);
+				try {
+					let res = await GoogleBardApiV3(text)
+					await m.reply(res);
+				} catch (e) {
+					await m.reply(eror);
+				}
 			}
 		}
 	}
@@ -100,3 +105,30 @@ async function GoogleBardApiV2(query) {
 	const bardText = await bardRes.json();
 	return bardText.respon;
 };
+
+async function GoogleBardApiV3(query) {
+	const postData = {
+		ask: query
+	};
+
+	try {
+		const response = await fetch('https://bard.rizzy.eu.org/api/onstage', {
+			method: 'POST',
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(postData)
+		});
+
+		if (!response.ok) {
+			throw new Error(`HTTP error! Status: ${response.status}`);
+		}
+
+		const data = await response.json();
+		return data.content;
+	} catch (error) {
+		console.error('Error:', error);
+		throw error;
+	}
+}
