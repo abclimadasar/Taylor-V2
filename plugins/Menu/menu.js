@@ -377,6 +377,7 @@ let handler = async (m, {
         */
         
         // Biasa
+        const caption = text.trim()
         await conn.sendFile(m.chat, Buffer.alloc(0), "D A S H B O A R D", caption, fakes, null, {
 	mimetype: [dpptx, ddocx, dxlsx, dpdf, drtf].getRandom(),
 	fileLength: fsizedoc,
