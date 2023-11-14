@@ -14,41 +14,34 @@ let handler = async (m, {
     usedPrefix,
     command
 }) => {
-    let who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender
-    let pp = await conn.profilePictureUrl(who).catch(_ => hwaifu.getRandom())
-    let name = await conn.getName(who)
-    let lang = args[0]
-    let text = args.slice(1).join(' ')
-    if ((args[0] || '').length !== 2) {
-        lang = defaultLang
-        text = args.join(' ')
-    }
-    if (!text && m.quoted?.text) text = m.quoted.text
+    let who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender;
+let pp = await conn.profilePictureUrl(who).catch(_ => hwaifu.getRandom());
+let name = await conn.getName(who);
 
-    let res
-    try {
-        res = await tts(text, lang)
-    } catch (e) {
-        m.reply(e + '')
-        text = args.join(' ')
-        if (!text) throw `Use example ${usedPrefix}${command} en hello world`
-        res = await tts(text, defaultLang)
-    } finally {
-        if (res) await conn.sendMessage(m.chat, {
-            audio: res,
-            seconds: fsizedoc,
+let lang = args[0] || defaultLang;
+let text = args.slice(1).join(' ') || (m.quoted?.text || '');
+
+try {
+    if (!text) throw `Masukkan input. Contoh penggunaan: ${usedPrefix}${command} en Halo dunia`;
+
+    let res = await tts(text, lang);
+
+    if (res) {
+        await conn.sendFile(m.chat, res, '', '', m, null, {
             ptt: true,
-            mimetype: "audio/mpeg",
-            fileName: "vn.mp3",
-            waveform: [100, 0, 100, 0, 100, 0, 100]
-        }, {
-            quoted: m
-        })
+            waveform: [100, 0, 100, 0, 100, 0, 100],
+            contextInfo: adReplyS.contextInfo
+        });
     }
+} catch (e) {
+    m.reply(`${e}`);
+    console.error('An error occurred:', e);
+}
+
 }
 handler.help = ['tts <lang> <teks>']
 handler.tags = ['tools']
-handler.command = /^g?tts$/i
+handler.command = /^(gtts|tts)$/i
 
 export default handler
 
