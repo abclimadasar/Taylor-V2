@@ -66,7 +66,87 @@ let handler = async (m, {
     __dirname,
     args
 }) => {
-await conn.sendReact(m.chat, "⏳", m.key)
+    let soun = ["aku-ngakak",
+        "anjay",
+        "ara-ara2",
+        "ara-ara-cowok",
+        "ara-ara",
+        "arigatou",
+        "assalamualaikum",
+        "asu",
+        "ayank",
+        "bacot",
+        "bahagia-aku",
+        "baka",
+        "bansos",
+        "beat-box2",
+        "beat-box",
+        "biasalah",
+        "bidadari",
+        "bot",
+        "buka-pintu",
+        "canda-anjing",
+        "cepetan",
+        "china",
+        "cuekin-terus",
+        "daisuki-dayo",
+        "daisuki",
+        "dengan-mu",
+        "Donasiku",
+        "gaboleh-gitu",
+        "gak-lucu",
+        "gamau",
+        "gay",
+        "gelay",
+        "gitar",
+        "gomenasai",
+        "hai-bot",
+        "hampa",
+        "hayo",
+        "hp-iphone",
+        "ih-wibu",
+        "i-like-you",
+        "india",
+        "karna-lo-wibu",
+        "kiss",
+        "kontol",
+        "ku-coba",
+        "maju-wibu",
+        "makasih",
+        "mastah",
+        "menuasli",
+        "menuku",
+        "menu",
+        "MenuYuki",
+        "nande-nande",
+        "nani",
+        "ngadi-ngadi",
+        "nikah",
+        "nuina",
+        "onichan",
+        "ownerku",
+        "owner-sange",
+        "pak-sapardi",
+        "pale",
+        "pantek",
+        "pasi-pasi",
+        "punten",
+        "sayang",
+        "siapa-sih",
+        "sudah-biasa",
+        "summertime",
+        "tanya-bapak-lu",
+        "to-the-bone",
+        "wajib",
+        "waku",
+        "woi",
+        "yamete",
+        "yowaimo",
+        "yoyowaimo"
+    ].getRandom()
+    let vn = "https://raw.githubusercontent.com/AyGemuy/HAORI-API/main/audio/" + soun + ".mp3"
+
+    await conn.sendReact(m.chat, "⏳", m.key)
     let tags
     let teks = `${args[0]}`.toLowerCase()
     let pp = [thumbdoc, thumb].getRandom() || fla + "menu " + teks
@@ -616,45 +696,50 @@ ${clockStringP(usrs.premiumTime - new Date())}` : ""}
             sections
         }
         if (teks == "404") {
-        /*
-            return conn.sendMessage(m.chat, listMessage, {
-                quoted: m,
-                mentions: await conn.parseMention(tek),
-                contextInfo: {
-                    forwardingScore: 99999,
-                    isForwarded: true
-                }
-            })
-            */
+            /*
+                return conn.sendMessage(m.chat, listMessage, {
+                    quoted: m,
+                    mentions: await conn.parseMention(tek),
+                    contextInfo: {
+                        forwardingScore: 99999,
+                        isForwarded: true
+                    }
+                })
+                */
             // Biasa
-            let sects = sections[2].rows.map((v, index ) => {
+            let sects = sections[2].rows.map((v, index) => {
                 return `${v.title.slice(16)}
 ${v.rowId}`.trim()
             }).filter(v => v).join("\n\n")
-            
-        
-        // Biasa
-        let caption = tek + "\n\n" + spas + "*[ C O M M A N D ]*\n" + sects
-        return await conn.sendFile(m.chat, Buffer.alloc(0), "D A S H B O A R D", caption, fakes, null, {
-	mimetype: [dpptx, ddocx, dxlsx, dpdf, drtf].getRandom(),
-	fileLength: fsizedoc,
-	pageCount: fpagedoc,
-	jpegThumbnail: await conn.resize([thumbdoc, thumb].getRandom(), 300, 150),
-	contextInfo: {
-		mentionedJid: [m.sender],
-		externalAdReply: {
-			body: bottime,
-			containsAutoReply: true,
-			mediaType: 1,
-			mediaUrl: sgc,
-			renderLargerThumbnail: true,
-			thumbnail: await conn.resize([thumbdoc, thumb].getRandom(), 350, 200),
-			thumbnailUrl: [thumbdoc, thumb].getRandom(),
-			title: `${ucapan()} ${m.name}`
-		}
-	}
-})
-    await conn.sendReact(m.chat, "✅", m.key)
+
+
+            // Biasa
+            let caption = tek + "\n\n" + spas + "*[ C O M M A N D ]*\n" + sects
+            return await conn.sendFile(m.chat, Buffer.alloc(0), "D A S H B O A R D", caption, fakes, false, {
+                mimetype: [dpptx, ddocx, dxlsx, dpdf, drtf].getRandom(),
+                fileLength: fsizedoc,
+                pageCount: fpagedoc,
+                jpegThumbnail: await conn.resize([thumbdoc, thumb].getRandom(), 300, 150),
+                contextInfo: {
+                    mentionedJid: [m.sender],
+                    externalAdReply: {
+                        title: ucapan() + " " + m.name,
+                        body: bottime,
+                        mediaType: 1,
+                        previewType: 0,
+                        renderLargerThumbnail: true,
+                        thumbnailUrl: [logo, imagebot].getRandom(),
+                        sourceUrl: ''
+                    }
+                }
+            });
+            await conn.sendPresenceUpdate('recording', m.chat);
+            await conn.sendFile(m.chat, vn, '', '', m, null, {
+                ptt: true,
+                waveform: [100, 0, 100, 0, 100, 0, 100],
+                contextInfo: adReplyS.contextInfo
+            });
+            await conn.sendReact(m.chat, "✅", m.key)
         }
 
         /* Info Total */
@@ -754,7 +839,7 @@ ${v.rowId}`.trim()
             readmore: readMore
         }
         text = text.replace(new RegExp(`%(${Object.keys(replace).sort((a, b) => b.length - a.length).join`|`})`, "g"), (_, name) => "" + replace[name])
-        
+
 
         //------------------< MENU >----------------
         /*
@@ -810,34 +895,33 @@ ${v.rowId}`.trim()
         */
         // Biasa
         let caption = text.trim()
-        await conn.sendMessage(m.chat, {
-	document: Buffer.alloc(0),
-	mimetype: [dpptx, ddocx, dxlsx, dpdf, drtf].getRandom(),
-	fileName: "D A S H B O A R D",
-	fileLength: fsizedoc,
-	pageCount: fpagedoc,
-	caption: caption,
-	jpegThumbnail: await conn.resize(thumbdoc, 300, 150),
-	contextInfo: {
-		mentionedJid: [m.sender],
-		externalAdReply: {
-			body: bottime,
-			containsAutoReply: true,
-			mediaType: 1,
-			mediaUrl: sgc,
-			renderLargerThumbnail: true,
-			sourceUrl: null,
-			//thumbnail: await (await conn.getFile(thumb)).data,
-			thumbnailUrl: thumb,
-			title: `${ucapan()} ${m.name}`
-		}
-	}
-}, {
-	quoted: m
-})
-    await conn.sendReact(m.chat, "✅", m.key)
+        await conn.sendFile(m.chat, Buffer.alloc(0), "D A S H B O A R D", caption, fakes, false, {
+            mimetype: [dpptx, ddocx, dxlsx, dpdf, drtf].getRandom(),
+            fileLength: fsizedoc,
+            pageCount: fpagedoc,
+            jpegThumbnail: await conn.resize([thumbdoc, thumb].getRandom(), 300, 150),
+            contextInfo: {
+                mentionedJid: [m.sender],
+                externalAdReply: {
+                    title: ucapan() + " " + m.name,
+                    body: bottime,
+                    mediaType: 1,
+                    previewType: 0,
+                    renderLargerThumbnail: true,
+                    thumbnailUrl: [logo, imagebot].getRandom(),
+                    sourceUrl: ''
+                }
+            }
+        });
+        await conn.sendPresenceUpdate('recording', m.chat);
+        await conn.sendFile(m.chat, vn, '', '', m, null, {
+            ptt: true,
+            waveform: [100, 0, 100, 0, 100, 0, 100],
+            contextInfo: adReplyS.contextInfo
+        });
+        await conn.sendReact(m.chat, "✅", m.key)
         // Biasa
-        
+
     } catch (e) {
         conn.reply(m.chat, "Maaf, menu sedang error", m)
         throw e
@@ -877,9 +961,9 @@ function clockStringP(ms) {
 function ucapan() {
     let waktunya = moment.tz("Asia/Makassar").format("HH");
     return waktunya >= 24 ? "Selamat Begadang 🗿" :
-           waktunya >= 18 ? "Selamat malam 🌙" :
-           waktunya >= 15 ? "Selamat sore 🌅" :
-           waktunya > 10 ? "Selamat siang ☀️" :
-           waktunya >= 4 ? "Selamat pagi 🌄" :
-           "Selamat Pagi 🗿";
+        waktunya >= 18 ? "Selamat malam 🌙" :
+        waktunya >= 15 ? "Selamat sore 🌅" :
+        waktunya > 10 ? "Selamat siang ☀️" :
+        waktunya >= 4 ? "Selamat pagi 🌄" :
+        "Selamat Pagi 🗿";
 }
