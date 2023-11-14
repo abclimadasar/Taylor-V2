@@ -57,13 +57,10 @@ await m.reply(wait + "\n" + lister[atas - 1])
 try {
     const res = await SayTTS(lister[atas - 1], bawah, kiri || 140, kanan || 157);
     if (res) {
-        await conn.sendMessage(m.chat, {
-            audio: res,
-            mimetype: 'audio/mp4',
+        await conn.sendFile(m.chat, res, '', '', m, null, {
             ptt: true,
-            waveform: [100, 0, 100, 0, 100, 0, 100]
-        }, {
-            quoted: m
+            waveform: [100, 0, 100, 0, 100, 0, 100],
+            contextInfo: adReplyS.contextInfo
         });
     }
 } catch (e) {

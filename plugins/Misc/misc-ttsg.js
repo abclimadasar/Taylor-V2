@@ -24,14 +24,11 @@ let handler = async (m, {
         if (!text) throw `Use example ${usedPrefix + command} en hello world`
         res = await TTSG(text, defaultLang)
     } finally {
-        if (res) await conn.sendMessage(m.chat, {
-        audio: await(await conn.getFile(res)).data,
-        mimetype: 'audio/mp4',
-        ptt: true,
-        waveform: [100, 0, 100, 0, 100, 0, 100]
-    }, {
-        quoted: m
-    })
+        if (res) await conn.sendFile(m.chat, res, '', '', m, null, {
+            ptt: true,
+            waveform: [100, 0, 100, 0, 100, 0, 100],
+            contextInfo: adReplyS.contextInfo
+        });
     }
 }
 handler.help = ["ttsg"]

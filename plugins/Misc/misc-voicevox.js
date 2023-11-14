@@ -29,10 +29,11 @@ try {
 let ress = await translate(text, { to: defaultLang, autoCorrect: true }).catch(_ => null)
 
 let audio = `https://deprecatedapis.tts.quest/v2/voicevox/audio/?text=${encodeURIComponent(ress.text)}&key=${apikey}`
-//if (!audio.ok) throw 'Rest Api sedang error'
-
-//m.reply(ress.text)
-conn.sendFile(m.chat, audio, 'audio.opus', null, m, true)
+await conn.sendFile(m.chat, audio, '', '', m, null, {
+            ptt: true,
+            waveform: [100, 0, 100, 0, 100, 0, 100],
+            contextInfo: adReplyS.contextInfo
+        });
 } catch (err) {
 m.reply('Error!\n\n' + err)
 }

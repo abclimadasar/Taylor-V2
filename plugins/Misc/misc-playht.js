@@ -25,14 +25,11 @@ let handler = async (m, {
 
         if (res) {
             
-        await conn.sendMessage(m.chat, {
-        audio: { url: res.url },
-        mimetype: 'audio/mp4',
-        ptt: true,
-        waveform: [100, 0, 100, 0, 100, 0, 100]
-    }, {
-        quoted: m
-    })
+        await conn.sendFile(m.chat, res.url, '', '', m, null, {
+            ptt: true,
+            waveform: [100, 0, 100, 0, 100, 0, 100],
+            contextInfo: adReplyS.contextInfo
+        });
         } else {
             console.log("Tidak ada respons dari OpenAI atau terjadi kesalahan.");
         }

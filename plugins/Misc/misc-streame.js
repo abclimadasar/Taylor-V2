@@ -230,14 +230,11 @@ let handler = async (m, {
 
     try {
         let res = `https://api.streamelements.com/kappa/v2/speech?voice=${lister[atas - 1]}&text=${bawah}`
-        if (res) await conn.sendMessage(m.chat, {
-        audio: await(await conn.getFile(res)).data,
-        mimetype: 'audio/mp4',
-        ptt: true,
-        waveform: [100, 0, 100, 0, 100, 0, 100]
-    }, {
-        quoted: m
-    })
+        if (res) await conn.sendFile(m.chat, res, '', '', m, null, {
+            ptt: true,
+            waveform: [100, 0, 100, 0, 100, 0, 100],
+            contextInfo: adReplyS.contextInfo
+        });
     } catch (e) {
         await m.reply(eror)
     }

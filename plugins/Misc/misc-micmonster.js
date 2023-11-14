@@ -491,14 +491,11 @@ let handler = async (m, {
 
     try {
         let res = await generateVoice(short, long, bawah)
-        if (res) await conn.sendMessage(m.chat, {
-        audio: res,
-        mimetype: 'audio/mp4',
-        ptt: true,
-        waveform: [100, 0, 100, 0, 100, 0, 100]
-    }, {
-        quoted: m
-    })
+        if (res) await conn.sendFile(m.chat, res, '', '', m, null, {
+            ptt: true,
+            waveform: [100, 0, 100, 0, 100, 0, 100],
+            contextInfo: adReplyS.contextInfo
+        });
     } catch (e) {
         await m.reply(eror)
     }
