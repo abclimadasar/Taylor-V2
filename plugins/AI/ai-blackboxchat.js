@@ -1,5 +1,6 @@
 import fetch from "node-fetch"
-
+import crypto from "crypto"
+const userId = crypto.randomUUID()
 let handler = async (m, {
     conn,
     args,
@@ -35,7 +36,7 @@ async function generateText(content) {
     const messages = [{ role: "user", content: content }, { role: "assistant", content: "Hello!" }];
     const response = await fetch("https://www.blackbox.ai/api/chat", {
       method: "POST",
-      body: JSON.stringify({ messages, id: null, mode: "continue", userId: null }),
+      body: JSON.stringify({ messages, id: userId, mode: "continue", userId: userId }),
     });
     return await response.text();
   } catch (error) {
