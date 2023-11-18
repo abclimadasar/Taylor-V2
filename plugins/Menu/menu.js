@@ -458,24 +458,124 @@ let handler = async (m, {
 
         // Biasa
         const caption = text.trim();
-        await conn.sendFile(m.chat, Buffer.alloc(0), "D A S H B O A R D", caption, fakes, false, {
-            mimetype: [dpptx, ddocx, dxlsx, dpdf, drtf].getRandom(),
-            fileLength: fsizedoc,
-            pageCount: fpagedoc,
-            jpegThumbnail: await conn.resize([thumbdoc, thumb].getRandom(), 300, 150),
-            contextInfo: {
-                mentionedJid: [m.sender],
-                externalAdReply: {
-                    title: ucapan() + " " + m.name,
-                    body: bottime,
-                    mediaType: 1,
-                    previewType: 0,
-                    renderLargerThumbnail: true,
-                    thumbnailUrl: [logo, imagebot].getRandom(),
-                    sourceUrl: ''
-                }
-            }
-        });
+        conn.temabot = conn.temabot ? conn.temabot : { id: 1 }
+    if (conn.temabot.id === 1) {
+	await conn.reply(
+		m.chat,
+		caption,
+		m, {
+			contextInfo: {
+				mentionedJid: [m.sender]
+			},
+		}
+	);
+} else if (conn.temabot.id === 2) {
+	await conn.reply(
+		m.chat,
+		caption,
+		m, {
+			contextInfo: {
+				mentionedJid: [m.sender],
+				externalAdReply: {
+					title: ucapan() + " " + m.name,
+					thumbnail: await (await conn.getFile([logo, imagebot].getRandom())).data
+				},
+			},
+		}
+	);
+} else if (conn.temabot.id === 3) {
+	await conn.reply(
+		m.chat,
+		caption,
+		m, {
+			contextInfo: {
+				mentionedJid: [m.sender],
+				externalAdReply: {
+					title: ucapan() + " " + m.name,
+					body: bottime,
+					mediaType: 1,
+					previewType: 0,
+					renderLargerThumbnail: true,
+					thumbnailUrl: [logo, imagebot].getRandom(),
+					sourceUrl: ''
+				}
+			},
+		}
+	);
+} else if (conn.temabot.id === 4) {
+	await conn.sendFile(m.chat, Buffer.alloc(0), "D A S H B O A R D", caption, fakes, false, {
+		mimetype: [dpptx, ddocx, dxlsx, dpdf, drtf].getRandom(),
+		fileLength: fsizedoc,
+		pageCount: fpagedoc,
+		jpegThumbnail: await conn.resize([thumbdoc, thumb].getRandom(), 300, 150),
+		contextInfo: {
+			mentionedJid: [m.sender]
+		}
+	});
+} else if (conn.temabot.id === 5) {
+	await conn.sendFile(m.chat, Buffer.alloc(0), "D A S H B O A R D", caption, fakes, false, {
+		mimetype: [dpptx, ddocx, dxlsx, dpdf, drtf].getRandom(),
+		fileLength: fsizedoc,
+		pageCount: fpagedoc,
+		jpegThumbnail: await conn.resize([thumbdoc, thumb].getRandom(), 300, 150),
+		contextInfo: {
+			mentionedJid: [m.sender],
+			externalAdReply: {
+				title: ucapan() + " " + m.name,
+				thumbnail: await (await conn.getFile([logo, imagebot].getRandom())).data
+			}
+		}
+	});
+} else if (conn.temabot.id === 6) {
+	await conn.sendFile(m.chat, Buffer.alloc(0), "D A S H B O A R D", caption, fakes, false, {
+		mimetype: [dpptx, ddocx, dxlsx, dpdf, drtf].getRandom(),
+		fileLength: fsizedoc,
+		pageCount: fpagedoc,
+		jpegThumbnail: await conn.resize([thumbdoc, thumb].getRandom(), 300, 150),
+		contextInfo: {
+			mentionedJid: [m.sender],
+			externalAdReply: {
+				title: ucapan() + " " + m.name,
+				body: bottime,
+				mediaType: 1,
+				previewType: 0,
+				renderLargerThumbnail: true,
+				thumbnailUrl: [logo, imagebot].getRandom(),
+				sourceUrl: ''
+			}
+		}
+	});
+} else if (conn.temabot.id === 7) {
+	await conn.relayMessage(m.chat, {
+		requestPaymentMessage: {
+			currencyCodeIso4217: 'INR',
+			amount1000: fsizedoc,
+			requestFrom: '0@s.whatsapp.net',
+			noteMessage: {
+				extendedTextMessage: {
+					text: caption,
+					contextInfo: {
+						mentionedJid: [m.sender],
+						externalAdReply: {
+							showAdAttribution: true
+						}
+					}
+				}
+			}
+		}
+	}, {});
+} else if (conn.temabot.id === 8) {
+	await conn.sendMessage(m.chat, {
+		video: {
+			url: giflogo
+		},
+		caption: caption,
+		gifPlayback: true,
+		gifAttribution: Math.floor(Math.random() * 2) + 1
+	}, {
+		quoted: m
+	});
+}
         await conn.sendPresenceUpdate('recording', m.chat);
         await conn.sendFile(m.chat, vn, '', '', m, null, {
             ptt: true,
