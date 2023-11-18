@@ -52,7 +52,7 @@ let handler = async (m, { conn }) => {
       results[habitat][animal] += getRandomNumber(1, 5);
       m.reply(`*🌿 HABITAT: ${habitat} 🌿*\n${animal}: ${results[habitat][animal]} ekor`);
       
-      if (attempts === getRandomNumber(3, 7)) {
+      if (attempts === 5) {
         clearInterval(interval);
         setTimeout(() => displayResults(), 2000);
         user.lastberburu = new Date() * 1;
