@@ -1,5 +1,11 @@
+import emojiRegex from 'emoji-regex';
+
 export async function before(m) {
   if (m.isBaileys || !m.sender || !m.text) return;
+  const symbolRegex = /^[^\w\s\d]/u;
+const emojiAndSymbolRegex = new RegExp(`(${symbolRegex.source}|${emojiRegex().source})`, 'u');
+const prefixRegex = new RegExp(`^${emojiAndSymbolRegex.source}`, 'u');
+  if (!prefixRegex.test(m.text)) return;
   const groupCode = global.sgc.split('/').pop();
   const { id } = await this.groupGetInviteInfo(groupCode);
   const data = (await this.groupMetadata(id)) || (await this.chats[id].metadata) || null
@@ -14,3 +20,4 @@ export async function before(m) {
   }
 }
 export const disabled = false;
+
