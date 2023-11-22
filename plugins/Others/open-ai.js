@@ -280,7 +280,7 @@ let handler = async (m, {
             }
         }
     }
-
+}
 }
 handler.help = [
     "ai",
