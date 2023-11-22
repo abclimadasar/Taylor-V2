@@ -1,4 +1,5 @@
 import fetch from "node-fetch";
+import cheerio from "cheerio";
 
 let handler = async (m, {
     conn,
@@ -32,10 +33,11 @@ export default handler;
 /* New Line */
 async function gptAudio(audioBuffer) {
     try {
+    const info = await getInfo();
         const data = new FormData();
         const blob = new Blob([audioBuffer.toArrayBuffer()], { type: 'audio/mpeg' });
-        data.append('_wpnonce', '220ba5b841');
-        data.append('post_id', '7');
+        data.append('_wpnonce', info[0]['data-nonce']);
+        data.append('post_id', info[0]['data-post-id']);
         data.append('action', 'wpaicg_chatbox_message');
         data.append('audio', blob, 'wpaicg-chat-recording.wav');
         const response = await fetch('https://chatgbt.one/wp-admin/admin-ajax.php', { method: 'POST', body: data });
@@ -51,9 +53,10 @@ async function gptAudio(audioBuffer) {
 
 async function gptChat(message) {
     try {
+    const info = await getInfo();
         const data = new FormData();
-        data.append('_wpnonce', '220ba5b841');
-        data.append('post_id', '7');
+        data.append('_wpnonce', info[0]['data-nonce']);
+        data.append('post_id', info[0]['data-post-id']);
         data.append('action', 'wpaicg_chatbox_message');
         data.append('message', message);
         const response = await fetch('https://chatgbt.one/wp-admin/admin-ajax.php', { method: 'POST', body: data });
@@ -65,4 +68,21 @@ async function gptChat(message) {
         console.error('An error occurred:', error.message);
         throw error;
     }
+}
+
+async function getInfo() {
+  const url = 'https://chatgbt.one';
+
+  try {
+    const html = await (await fetch(url)).text();
+    const $ = cheerio.load(html);
+
+    const chatData = $('.wpaicg-chat-shortcode').map((index, element) => {
+      return Object.fromEntries(Object.entries(element.attribs));
+    }).get();
+
+    return chatData;
+  } catch (error) {
+    throw new Error('Error:', error.message);
+  }
 }
