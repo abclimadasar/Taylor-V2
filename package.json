@@ -66,6 +66,7 @@
         "chess.js": "*",
         "crypto": "*",
         "deepai": "*",
+        "deobfuscator": "*",
         "dhn-api": "*",
         "didyoumean": "*",
         "emoji-api": "*",
