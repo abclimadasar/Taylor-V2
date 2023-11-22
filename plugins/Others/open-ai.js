@@ -173,6 +173,10 @@ let handler = async (m, {
 });
             await m.reply("*Result:*\n\n" + chatCompletion.choices[0].message + "\n\n" + "*Made by:* " + "OPENAI")
         } catch (e) {
+        try {
+        let result = await ChatGptBing(text)
+                await m.reply("*Result:*\n\n" + result + "\n\n" + "*Made by:* " + "BingAI")
+        } catch (e) {
             try {
                 let result = await CleanDx("Gunakan bahasa indonesia, " + text)
                 await m.reply("*Result:*\n\n" + result + "\n\n" + "*Made by:* " + "CLEANDX")
@@ -223,6 +227,7 @@ let handler = async (m, {
                     }
                 }
             }
+            
         }
     }
 
@@ -337,6 +342,30 @@ function clean(string) {
     return string.replace(/{/g, '').replace(/}/g, '').replace(/"/g, '').replace(/,/g, '\n')
 }
 
+async function ChatGptBing(prompt) {
+let response = await (await fetch("https://copilot.github1s.tk/v1/chat/completions", {
+        method: "POST",
+        headers: {
+            "Authorization": "dummy",
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            "model": "Creative",
+            "max_tokens": 100,
+            "messages": [{
+                    "role": "system",
+                    "content": "You are an helpful assistant."
+                },
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ]
+        })
+    })).json()
+    return response.choices[0].message.content
+    }
+    
 const pkey = "pk-kyptPcoSLLtQyiqFBvRtpyVBKLiPzYiBOYceqwEgVrMKCPHc"
 
 async function ChatGpt(prompt) {
